@@ -1,10 +1,12 @@
 const mailbox = document.getElementById("mailbox");
 const mailboxWrapper = document.getElementById("mailboxWrapper");
 const letter = document.getElementById("letter");
+const foldedLetter = document.getElementById("foldedLetter");
 const heartsContainer = document.getElementById("heartsContainer");
 const backgroundMusic = document.getElementById("backgroundMusic");
 let isOpened = false;
 let musicPlayed = false;
+let letterIsUnfolded = false; // Vẫn cần để tránh kích hoạt lại
 
 // Create hearts on page load
 function createHearts() {
@@ -61,6 +63,32 @@ document.addEventListener("touchstart", () => {
     playMusic();
 }, { once: true });
 
+
+// LOGIC TỰ ĐỘNG MỞ THƯ
+function autoUnfoldLetter() {
+    if (letterIsUnfolded) return; 
+
+    letterIsUnfolded = true;
+
+    // 1. Ẩn lá thư gấp sau 2 GIÂY KHI NÓ VỪA HIỆN RA
+    setTimeout(() => {
+        foldedLetter.classList.add("hide");
+        
+        // 2. Đợi 0.3s để hiệu ứng ẩn thư gấp xong
+        setTimeout(() => {
+            foldedLetter.style.display = 'none'; // Ẩn hẳn
+            
+            // 3. Hiển thị bức thư đầy đủ ngay lập tức với animation "opening"
+            letter.classList.add("show");
+            letter.classList.add("opening");
+            
+        }, 300); // 0.3 giây cho hiệu ứng ẩn thư gấp
+        
+    }, 2000); // Đợi 2 giây sau khi thư gấp đã hiện ra
+}
+
+
+// Sự kiện khi click vào Hòm thư
 mailbox.addEventListener("click", () => {
     if (isOpened) return; // Prevent multiple clicks
     
@@ -72,19 +100,21 @@ mailbox.addEventListener("click", () => {
     // Add opened class to show open mailbox
     mailbox.classList.add("opened");
     
-    // Wait a bit for the mailbox to open, then show letter
+    // Đợi 0.3s cho hòm thư mở, sau đó hiện lá thư gấp VÀ kích hoạt TỰ ĐỘNG MỞ
     setTimeout(() => {
-        letter.classList.add("show");
+        foldedLetter.classList.add("show"); // HIỆN THƯ GẤP
+        autoUnfoldLetter(); // KÍCH HOẠT TỰ ĐỘNG MỞ
     }, 300);
     
     // Disable cursor pointer after opening
     mailbox.style.cursor = "default";
 });
 
-// Touch event for better mobile support
+// Touch event cho Hòm thư
 mailbox.addEventListener("touchstart", (e) => {
     e.preventDefault();
     if (!isOpened) {
         mailbox.click();
     }
 }, { passive: false });
+

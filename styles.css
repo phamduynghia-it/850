@@ -167,7 +167,68 @@ body {
         transform: scale(1);
     }
 }
-/* Letter Styles */
+
+/* ---------------------------------- */
+/* PHẦN ĐÃ CHỈNH SỬA CHO HIỆU ỨNG THƯ */
+/* ---------------------------------- */
+
+/* Folded Letter Styles */
+.folded-letter {
+    position: absolute; /* Quan trọng để nó nổi lên trên hòm thư */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 80px;
+    background: #ffecf5; /* Màu hồng nhạt */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: none; /* Mặc định ẩn */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    /* BỎ cursor: pointer; vì thư tự mở */
+    z-index: 15; /* Cao hơn hòm thư và thư đầy đủ khi ẩn */
+    border: 2px solid #e65aa8;
+    text-align: center;
+    padding: 10px;
+}
+
+.folded-letter.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    animation: floating 2s infinite ease-in-out, foldedLetterAppear 0.5s ease-out;
+}
+
+.folded-letter.hide {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.folded-content {
+    font-family: "Mali", sans-serif;
+    color: #e65aa8;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.click-prompt {
+    /* ẨN DÒNG CHỮ HƯỚNG DẪN CLICK */
+    display: none; 
+}
+
+@keyframes foldedLetterAppear {
+    0% {
+        transform: translate(-50%, -100%) scale(0.5);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Letter Styles (Bức thư đầy đủ) */
 .letter {
     width: 100%;
     max-width: 400px;
@@ -176,14 +237,14 @@ body {
     padding: 30px 25px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     opacity: 0;
-    transform: translateY(-50px) scale(0.8);
     transition: opacity 0.6s ease, transform 0.6s ease;
     display: none;
     margin: 0 auto;
-    position: relative;
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Căn giữa */
     z-index: 10;
-
-    /* sửa */
     overflow: visible;
     max-height: none;
 }
@@ -207,21 +268,24 @@ body {
 .letter.show {
     display: block;
     opacity: 1;
-    transform: translateY(0) scale(1);
-    animation: letterFlyOut 1s ease-out;
+    transform: translate(-50%, -50%) scale(1); 
 }
 
-@keyframes letterFlyOut {
+.letter.opening {
+    animation: letterOpeningEffect 1s ease-out forwards;
+}
+
+@keyframes letterOpeningEffect {
     0% {
-        transform: translateY(-100px) scale(0.3) rotate(-10deg);
+        transform: translate(-50%, -20%) scale(0.3) rotate(-10deg);
         opacity: 0;
     }
     50% {
-        transform: translateY(-20px) scale(0.9) rotate(5deg);
+        transform: translate(-50%, -50%) scale(0.9) rotate(5deg);
         opacity: 0.8;
     }
     100% {
-        transform: translateY(0) scale(1) rotate(0deg);
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
         opacity: 1;
     }
 }
